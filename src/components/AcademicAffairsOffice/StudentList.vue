@@ -40,23 +40,28 @@
                 </template>
             </el-table-column>
         </el-table>
-        <el-pagination layout="prev, pager, next" :total="50" @prev-click="prevfun" @next-click="nextfun"
-            @current-change="currentchange">
+        <el-pagination layout="prev, pager, next" :total=totalpage :page-size=pagesize @prev-click="prevfun"
+            @next-click="nextfun" @current-change="currentchange">
         </el-pagination>
 
         <el-dialog title="成绩管理" :visible.sync="dialogVisible" width="60%" center>
             <div>
-                <el-form ref="form" :model="form" label-width="120px">
+                <el-form ref="form" :model="form" label-width="70px">
                     <el-form-item label="盲审成绩">
                         <div v-if="this.currentstudent.blindScore == -1">
-                            <div>
-                                <el-input placeholder="请输入该生盲审成绩" :disabled="false" type="textarea" autosize
-                                    v-model="form.blindScore"></el-input>
-                            </div>
-                            <div>
-                                <el-button class="scorebutton" type="primary" icon="el-icon-check" circle
-                                    @click="check1"></el-button>
-                            </div>
+                            <el-row :gutter="20">
+                                <el-col :span="16">
+                                    <div>
+                                        <el-input placeholder="请输入该生盲审成绩" :disabled="false" type="textarea" autosize
+                                            v-model="form.blindScore"></el-input>
+                                    </div>
+                                </el-col>
+                                <el-col :span="4">
+                                    <div>
+                                        <el-button class="scorebutton" type="primary" @click="check1">保存</el-button>
+                                    </div>
+                                </el-col>
+                            </el-row>
                         </div>
                         <div v-else>
                             <el-input :placeholder="this.currentstudent.blindScore" :disabled="true" type="textarea"
@@ -65,10 +70,18 @@
                     </el-form-item>
                     <el-form-item label="答辩成绩">
                         <div v-if="this.currentstudent.defenseScore == -1">
-                            <el-input placeholder="请输入该生答辩成绩" :disabled="false" type="textarea" autosize
-                                v-model="form.defenseScore"></el-input>
-                            <el-button class="scorebutton" type="primary" icon="el-icon-check" circle
-                                @click="check2"></el-button>
+                            <el-row :gutter="20">
+                                <el-col  :span="16">
+                                    <el-input placeholder="请输入该生答辩成绩" :disabled="false" type="textarea" autosize
+                                        v-model="form.defenseScore"></el-input>
+                                </el-col>
+                                <el-col  :span="4">
+                                    <div>
+                                        <el-button class="scorebutton" type="primary" @click="check2">
+                                            保存</el-button>
+                                    </div>
+                                </el-col>
+                            </el-row>
                         </div>
                         <div v-else>
                             <el-input :placeholder=this.currentstudent.defenseScore :disabled="true" type="textarea"
@@ -104,9 +117,12 @@ export default {
             form: { blindScore: 0, defenseScore: 0 },
             studentComment: new Array(),
             supervisorComment: new Array(),
+            totalpage: 0,
+            pagesize: 3
         }
     },
     created() {
+        this.gettotalpage();
         this.loading(0);
     },
     methods: {
@@ -158,21 +174,28 @@ export default {
         },
         prevfun(value) {
             //value拿到的当前的页码，点击上一页触发该函数
-            this.loading(value)
+            this.loading(value - 1)
         },
         nextfun(value) {
             //value拿到页码，点击下一页触发该函数
-            this.loading(value)
+            this.loading(value - 1)
         },
         currentchange(value) {
             //页码发生变化会触发，这个用来触发点击页码时触发的。
-            this.loading(value)
+            this.loading(value - 1)
+        },
+        gettotalpage() {
+            var parm = { page: 0, size: 9999, identityNumber: "" }
+            GetAllStudents(parm).then(res => {
+                this.totalpage = res.data.result.stus.length
+            })
         },
         loading(curpage) {
             //console.log("yes")
-            var parm = { page: curpage, size: 5, identityNumber: "" }
+            var parm = { page: curpage, size: this.pagesize, identityNumber: "" }
+            //console.log(parm)
             GetAllStudents(parm).then(res => {
-                console.log(res)
+                //console.log(res)
                 if (res.data.code === 0) {
                     this.tableData = res.data.result.stus
                     this.Term = this.tableData
@@ -200,7 +223,10 @@ export default {
 }
 </script>
 <style lang="scss">
-.scorebutton {
-    margin: 0 auto;
+.buttoncontainer {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 </style>

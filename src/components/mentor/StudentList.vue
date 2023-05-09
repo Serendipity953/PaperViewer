@@ -67,7 +67,8 @@
                 </el-table-column>
             </el-table>
             <div style="margin-bottom: 50px;"></div>
-            <el-pagination layout="prev, pager, next" :total="50">
+            <el-pagination layout="prev, pager, next" :total=totalpage :page-size=pagesize @prev-click="prevfun"
+                @next-click="nextfun" @current-change="currentchange">
             </el-pagination>
 
             <el-dialog title="初稿评价及文件确认" :visible.sync="dialogVisible" width="60%" center>
@@ -99,8 +100,9 @@
 
                     </el-form>
                 </div>
-                <el-button type="primary" icon="el-icon-check" circle @click="check"></el-button>
+                
                 <span slot="footer" class="dialog-footer">
+                    <el-button type="primary"  @click="check">保存</el-button>
                     <el-button @click="quitClick">返回</el-button>
 
                 </span>
@@ -110,19 +112,21 @@
         <div>
             <el-divider>绑定学生</el-divider>
             <div style="margin: 20px;"></div>
-            <el-form label-width="80px" :model="wantedstudent">
-                <el-form-item label="学号">
-                    <el-input v-model="wantedstudent.identityNumber"></el-input>
-                </el-form-item>
-                <el-form-item label="姓名">
-                    <el-input v-model="wantedstudent.name"></el-input>
-                </el-form-item>
-                <el-form-item label="学院">
-                    <el-input v-model="wantedstudent.college"></el-input>
-                </el-form-item>
-                <el-button @click="Search" type="text" size="small">查找</el-button>
-                <el-button @click="Bind" type="text" size="small">绑定</el-button>
-            </el-form>
+            <el-card class="bindcontainer">
+                <el-form class="bindstus" label-width="50px" :model="wantedstudent">
+                    <el-form-item label="学号">
+                        <el-input v-model="wantedstudent.identityNumber"></el-input>
+                    </el-form-item>
+                    <el-form-item label="姓名">
+                        <el-input v-model="wantedstudent.name"></el-input>
+                    </el-form-item>
+                    <el-form-item label="学院">
+                        <el-input v-model="wantedstudent.college"></el-input>
+                    </el-form-item>
+                    <el-button @click="Search" type="text" size="small">查找</el-button>
+                    <el-button @click="Bind" type="text" size="small">绑定</el-button>
+                </el-form>
+            </el-card>
         </div>
 
     </div>
@@ -145,12 +149,15 @@ export default {
                 name: '',
                 college: '',
                 supervisorID: '',
-                value:false
-            }
+                value: false
+            },
+            totalpage: 0,
+            pagesize: 2
         }
     },
     created() {
-        this.loading();
+        this.gettotalpage();
+        this.loading(0);
     },
     methods: {
         test() {
@@ -306,9 +313,27 @@ export default {
 
 
         },
-        loading() {
+        prevfun(value) {
+            //value拿到的当前的页码，点击上一页触发该函数
+            this.loading(value - 1)
+        },
+        nextfun(value) {
+            //value拿到页码，点击下一页触发该函数
+            this.loading(value - 1)
+        },
+        currentchange(value) {
+            //页码发生变化会触发，这个用来触发点击页码时触发的。
+            this.loading(value - 1)
+        },
+        gettotalpage() {
+            var parm = { page: 0, size: 9999, identityNumber: "" }
+            mentorGetStudents(parm).then(res => {
+                this.totalpage = res.data.result.stus.length
+            })
+        },
+        loading(curpage) {
             //console.log("yes")
-            var parm = { page: 0, size: 10, identityNumber: "" }
+            var parm = { page: curpage, size: this.pagesize, identityNumber: "" }
             mentorGetStudents(parm).then(res => {
                 //console.log(res)
                 if (res.data.code === 0) {
@@ -338,4 +363,17 @@ export default {
 }
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.bindcontainer{
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .bindstus {
+    width: 500px;
+}
+}
+.el-dialog{
+
+}
+</style>

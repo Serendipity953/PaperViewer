@@ -26,24 +26,29 @@
                 </div>
                 <el-tag type="warning" v-if="!this.gradulProcess.firstDraft">初稿未上传</el-tag>
                 <el-tag type="success" v-else>初稿已上传</el-tag>
-<div style="margin: 40px 0;">
-
-</div>
+                <div style="margin: 40px 0;">
+                </div>
                 <el-divider>初稿评价</el-divider>
                 <div class="supervisorComment">
                     <span><i class="el-icon-s-comment el-icon--left" style="margin: 20px 0;"></i>导师评价</span>
-                    <el-input placeholder="导师暂未评价" :disabled="true" :autosize="{ minRows: 4, maxRows: 8}" type="textarea" v-if="!this.comment.supervisorComment">
+                    <el-input placeholder="导师暂未评价" :disabled="true" :autosize="{ minRows: 4, maxRows: 8 }" type="textarea"
+                        v-if="!this.comment.supervisorComment">
                     </el-input>
-                    <el-input :placeholder=this.comment.supervisorComment :disabled="true"  :autosize="{ minRows: 4, maxRows: 8}" type="textarea" v-else></el-input>
+                    <el-input :placeholder=this.comment.supervisorComment :disabled="true"
+                        :autosize="{ minRows: 4, maxRows: 8 }" type="textarea" v-else></el-input>
                 </div>
-                <div class="studentComment" >
+                <div class="studentComment">
                     <span><i class="el-icon-edit-outline el-icon--left" style="margin: 20px 0;"></i>学生自评</span>
                     <div v-if="!this.comment.studentComment">
-                        <el-input placeholder="请完成自评" v-model="selfcomment"  :autosize="{ minRows: 4, maxRows: 8}" type="textarea"></el-input>
+                        <el-input placeholder="请完成自评" v-model="selfcomment" :autosize="{ minRows: 4, maxRows: 8 }"
+                            type="textarea"></el-input>
+                        <div style="margin: 40px 0;">
+                        </div>
                         <el-button type="primary" icon="el-icon-edit" circle @click="cmtsubmit"></el-button>
                     </div>
                     <div v-else>
-                        <el-input :placeholder=this.comment.studentComment :disabled="true"  :autosize="{ minRows: 4, maxRows: 8}" type="textarea"></el-input>
+                        <el-input :placeholder=this.comment.studentComment :disabled="true"
+                            :autosize="{ minRows: 4, maxRows: 8 }" type="textarea"></el-input>
                     </div>
 
                 </div>
@@ -342,10 +347,12 @@ export default {
 .uplodbutton {
     margin-bottom: 20px;
 }
-.supervisorComment{
+
+.supervisorComment {
     height: 200px;
 }
-.studentComment{
+
+.studentComment {
     height: 200px;
 }
 </style>

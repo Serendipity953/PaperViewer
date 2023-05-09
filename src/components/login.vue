@@ -2,13 +2,13 @@
     <div class="login">
         <el-card class="box-card">
             <div slot="header" class="clearfix">
-                <span>毕业论文管理系统登录</span>
+                <span style="color: black;">毕业论文管理系统登录</span>
             </div>
             <el-form status-icon label-width="80px" :model="user" ref="form" :rules="rules">
-                <el-form-item label="用户名" prop="identityNumber">
+                <el-form-item label="用户名" prop="identityNumber" >
                     <el-input v-model="user.identityNumber"></el-input>
                 </el-form-item>
-                <el-form-item label="密码" prop="password">
+                <el-form-item label="密码" prop="password" >
                     <el-input type="password" v-model="user.password"></el-input>
                 </el-form-item>
                 <el-form-item>
@@ -69,6 +69,7 @@ export default {
                 if (valid) {
                     this.user.password=md5(this.user.password)
                     login(this.user).then(res => {
+                        console.log(res)
                         if (res.data.code === 0) {
                             this.$message({ message: "登录成功", type: 'success' })
                             getUserInfo().then(res=>{
@@ -119,7 +120,7 @@ export default {
         margin:200px auto;
         color:floralwhite;
         .el-form-item__label{
-            color: #fff;
+            color: #030303;
             font-size: 20px;
         }
         .el-card__header{

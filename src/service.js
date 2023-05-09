@@ -19,9 +19,8 @@ service.interceptors.request.use((config) => {
 //响应拦截器
 service.interceptors.response.use((response) => {
     //对响应数据的一些处理
-    let {status,message}=response.data
-    if(status!=200){
-        Message({message:message||'error',type:'warning'})
+    if(response.status!=200){
+        Message({message:response.data.message||'error',type:'warning'})
     }
     return response
 },
